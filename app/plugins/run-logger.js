@@ -77,9 +77,8 @@ module.exports = {
   getArtifactData(artifact) {
     const artifactDrop = {
       drop: 'Artifact',
-      set: `${gMapping.artifact.types[artifact.type]} (${
-        artifact.type === 1 ? gMapping.monster.attributes[artifact.attribute] : gMapping.monster.archetypes[artifact.unit_style]
-      })`,
+      set: `${gMapping.artifact.types[artifact.type]} 
+      (${artifact.type === 1 ? gMapping.monster.attributes[artifact.attribute] : gMapping.monster.archetypes[artifact.unit_style]})`,
       rarity: gMapping.artifact.rank[artifact.natural_rank],
       main_stat: gMapping.getArtifactEffect(artifact.pri_effect),
     };
@@ -284,28 +283,33 @@ module.exports = {
       entry.drop = 'Secret Dungeon';
     }
 
+    // comments here are the locations from BattleDungeonResult_V2 in full_log.txt
     const headers = [
-      'date',
-      'dungeon',
-      'result',
-      'time',
-      'mana',
-      'crystal',
-      'energy',
-      'drop',
-      'grade',
-      'sell_value',
-      'set',
-      'efficiency',
-      'slot',
-      'rarity',
-      'main_stat',
-      'prefix_stat',
-      'sub1',
-      'sub2',
-      'sub3',
-      'sub4',
-      'team1',
+      'date', //BattleDungeonstart_v2.Response.tvalue(local)
+      // var timestamp = BattleDungeonstart_v2.Response.tvalue(local)
+      // var date = new Date(timestamp);
+      // console.log(date.getTime())
+      // console.log(date)
+      'dungeon', //dungeon_id 9001 db
+      'result', //win_lose 1 = win 2 = lose
+      'time', //clear_time.current_time
+      'mana', //reward.nana
+      'crystal', //reward.crystal
+      'energy', //reward.energy
+      'drop', //changed_item_list
+      'grade', //changed_item_list.info.rank
+      'sell_value', //changed_item_list.info.sell_value
+      'set', //changed_item_list.info.set_id
+      'efficiency', //changed_item_list.info.
+      'slot', //changed_item_list.info.slot_no
+      'rarity', //changed_item_list.info.view.rune_rank
+      'main_stat', //changed_item_list.info.view.pri_eff[0]
+      'prefix_stat', //changed_item_list.info.view.prefix_eff[0]
+      'sub1', //changed_item_list.info.view.sec_eff[0[0], 0[1]]. blank if not avaliable
+      'sub2', //changed_item_list.info.view.sec_eff[1[0], 0[1]]. blank if not avaliable
+      'sub3', //changed_item_list.info.view.sec_eff[2[0], 0[1]]. blank if not avaliable
+      'sub4', //changed_item_list.info.view.sec_eff[3[0], 0[1]]. blank if not avaliable
+      'team1', //Response.unit_list
       'team2',
       'team3',
       'team4',
