@@ -290,10 +290,10 @@ module.exports = {
       // var date = new Date(timestamp);
       // console.log(date.getTime())
       // console.log(date)
-      'dungeon', //dungeon_id 9001 db
+      'dungeon', //dungeon_id ex: 9001 = db
       'result', //win_lose 1 = win 2 = lose
       'time', //clear_time.current_time
-      'mana', //reward.nana
+      'mana', //reward.mana
       'crystal', //reward.crystal
       'energy', //reward.energy
       'drop', //changed_item_list
