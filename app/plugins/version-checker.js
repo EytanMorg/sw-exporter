@@ -30,17 +30,24 @@ module.exports = {
           if (!error && response.statusCode === 200) {
             let json_body = JSON.parse(body);
             let message;
+
             if (json_body.tag_name.substring(1) === global.appVersion) {
               message = 'You have the latest version!';
+              proxy.log({
+                type: 'success',
+                source: 'plugin',
+                name: this.pluginName,
+                message: `${message}`,
+              });
             } else {
               message = `You have ${global.appVersion} and ${json_body.tag_name} is the latest version.  Go to ${LATEST_DOWNLOAD_URL} to download the latest version of the app.`;
+              proxy.log({
+                type: 'error',
+                source: 'plugin',
+                name: this.pluginName,
+                message: `${message}`,
+              });
             }
-            proxy.log({
-              type: 'success',
-              source: 'plugin',
-              name: this.pluginName,
-              message: `${message}`,
-            });
           } else {
             proxy.log({
               type: 'error',
