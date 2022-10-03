@@ -107,6 +107,7 @@ td[bgcolor='lightgreen'] {
   .ui.small.icon.left.labeled.button *,
   .ui.small.icon.left.labeled.button,
   .ui.top.left.small.popup.transition.visible *,
+  .dimmable.dimmed *,
   textarea {
     color: rgb(0, 0, 0) !important;
   }
