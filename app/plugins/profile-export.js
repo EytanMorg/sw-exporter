@@ -11,22 +11,28 @@ module.exports = {
     enabled: true,
     sortData: true,
     mergeStorage: true,
+    timestamp: false,
   },
   defaultConfigDetails: {
     sortData: { label: 'Sort data like ingame' },
     mergeStorage: { label: 'Merge sealed monster storage into profile data' },
+    timestamp: { label: 'Organize player json by date' },
   },
   pluginName: 'ProfileExport',
   pluginDescription: 'Exports your monster and rune data.',
   temp: {},
   init(proxy, config) {
     proxy.on('HubUserLogin', (req, resp) => {
+      // const timestampEnabled = config.Config.Plugins[this.pluginName].timestamp;
       if (config.Config.Plugins[this.pluginName].enabled) {
         if (!this.checkData(resp)) {
           return proxy.log({ type: 'error', source: 'plugin', name: this.pluginName, message: MISSING_DATA_ERROR });
         }
         if (config.Config.Plugins[this.pluginName].sortData) {
           resp = this.sortUserData(resp);
+        }
+        if (config.Config.Plugins[this.pluginName].timestamp) {
+          timestamp = this.addtimestamp(resp);
         }
 
         this.temp[resp.wizard_info.wizard_id] = resp;
@@ -36,6 +42,7 @@ module.exports = {
         }
       }
     });
+
     proxy.on('GuestLogin', (req, resp) => {
       if (config.Config.Plugins[this.pluginName].enabled) {
         if (!this.checkData(resp)) {
@@ -72,13 +79,16 @@ module.exports = {
       }
     });
   },
+
   writeProfileToFile(proxy, wizardID) {
     const timestamp = dateformat.format(new Date(), 'yyyy-MM-dd_HHmmss');
     const wizardName = this.temp[wizardID].wizard_info.wizard_name;
-    const filename = sanitize(`${wizardName}-${wizardID}-${timestamp}`).concat('.json');
-
+    const filename = sanitize(`${wizardName}-${wizardID}`).concat('.json');
+    if (config.Config.Plugins[this.pluginName].timestamp === true) {
+      filename = sanitize(`${this.temp[wizardID].wizard_info.wizard_name}-${wizardID}-${timestamp}`).concat('.json');
+    }
     fse.ensureDirSync(path.join(config.Config.App.filesPath, 'profile saves'));
-    let outFile = fs.createWriteStream(path.join(config.Config.App.filesPath, 'profile saves', filename), {
+    let outFile = fs.createWriteStream(path.join(config.Config.App.filesPath, filename), {
       flags: 'w',
       autoClose: true,
     });
@@ -87,6 +97,27 @@ module.exports = {
     outFile.end();
     proxy.log({ type: 'success', source: 'plugin', name: this.pluginName, message: 'Saved profile data to '.concat(filename) });
   },
+
+  // writeProfileToFile(proxy, resp, config, wizardID) {
+  //   const timestamp = dateformat.format(new Date(), 'yyyy-MM-dd_HHmmss');
+  //   const wizardName = this.temp[wizardID].wizard_info.wizard_name;
+  //   const filename = sanitize(`${wizardName}-${wizardID}`).concat('.json');
+
+  //   if (config.Config.Plugins[this.pluginName].timestamp === true) {
+  //     filename = sanitize(`${this.temp[wizardID].wizard_info.wizard_name}-${wizardID}-${timestamp}`).concat('.json');
+  //   }
+
+  //   fse.ensureDirSync(path.join(config.Config.App.filesPath, 'profile saves'));
+  //   let outFile = fs.createWriteStream(path.join(config.Config.App.filesPath, 'profile saves', filename), {
+  //     flags: 'w',
+  //     autoClose: true,
+  //   });
+
+  //   outFile.write(JSON.stringify(this.temp[wizardID], true, 2));
+  //   outFile.end();
+  //   proxy.log({ type: 'success', source: 'plugin', name: this.pluginName, message: 'Saved profile data to '.concat(filename) });
+  // },
+
   checkData(data) {
     // Sometimes com2us doesn't include al lthe required data in the request
     // Most notably is the missing of the building_list object.
