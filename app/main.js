@@ -68,12 +68,12 @@ let quitting = false;
 
 function createWindow() {
   let mainWindowState = windowStateKeeper({
-    defaultWidth: 1100,
+    defaultWidth: 800,
     defaultHeight: 600,
   });
 
   global.win = new BrowserWindow({
-    minWidth: 1100,
+    minWidth: 800,
     minHeight: 600,
     x: mainWindowState.x,
     y: mainWindowState.y,
@@ -145,23 +145,9 @@ function createWindow() {
     e.preventDefault();
     shell.openExternal(link);
   });
-
-  //dark mode toggles
-  ipcMain.handle('dark-mode:toggle', () => {
-    if (nativeTheme.shouldUseDarkColors) {
-      nativeTheme.themeSource = 'light';
-    } else {
-      nativeTheme.themeSource = 'dark';
-    }
-    return nativeTheme.shouldUseDarkColors;
-  });
-
-  ipcMain.handle('dark-mode:system', () => {
-    nativeTheme.themeSource = 'system';
-  });
 }
 
-proxy.on('error', () => { });
+proxy.on('error', () => {});
 
 ipcMain.on('proxyIsRunning', (event) => {
   event.returnValue = proxy.isRunning();
@@ -425,21 +411,21 @@ app.on('ready', async () => {
     // { role: 'appMenu' }
     ...(isMac
       ? [
-        {
-          label: app.name,
-          submenu: [
-            { role: 'about' },
-            { type: 'separator' },
-            { role: 'services' },
-            { type: 'separator' },
-            { role: 'hide' },
-            { role: 'hideOthers' },
-            { role: 'unhide' },
-            { type: 'separator' },
-            { role: 'quit' },
-          ],
-        },
-      ]
+          {
+            label: app.name,
+            submenu: [
+              { role: 'about' },
+              { type: 'separator' },
+              { role: 'services' },
+              { type: 'separator' },
+              { role: 'hide' },
+              { role: 'hideOthers' },
+              { role: 'unhide' },
+              { type: 'separator' },
+              { role: 'quit' },
+            ],
+          },
+        ]
       : []),
     // { role: 'editMenu' }
     {
@@ -453,15 +439,15 @@ app.on('ready', async () => {
         { role: 'paste' },
         ...(isMac
           ? [
-            { role: 'pasteAndMatchStyle' },
-            { role: 'delete' },
-            { role: 'selectAll' },
-            { type: 'separator' },
-            {
-              label: 'Speech',
-              submenu: [{ role: 'startSpeaking' }, { role: 'stopSpeaking' }],
-            },
-          ]
+              { role: 'pasteAndMatchStyle' },
+              { role: 'delete' },
+              { role: 'selectAll' },
+              { type: 'separator' },
+              {
+                label: 'Speech',
+                submenu: [{ role: 'startSpeaking' }, { role: 'stopSpeaking' }],
+              },
+            ]
           : [{ role: 'delete' }, { type: 'separator' }, { role: 'selectAll' }]),
       ],
     },
