@@ -13,6 +13,8 @@ const { validate, compare } = require('compare-versions');
 const SWProxy = require('./proxy/SWProxy');
 const transparentProxy = require('./steamproxy/transparent_proxy');
 const proxy = new SWProxy(transparentProxy);
+const electron = require('electron');
+const nativeTheme = electron.nativeTheme;
 
 const path = require('path');
 const url = require('url');
@@ -145,6 +147,21 @@ function createWindow() {
     e.preventDefault();
     shell.openExternal(link);
   });
+
+  //dark mode toggles
+  ipcMain.handle('dark-mode:toggle', () => {
+    if (nativeTheme.shouldUseDarkColors) {
+      nativeTheme.themeSource = 'light';
+    } else {
+      nativeTheme.themeSource = 'dark';
+    }
+    return nativeTheme.shouldUseDarkColors;
+  });
+
+  ipcMain.handle('dark-mode:system', () => {
+    nativeTheme.themeSource = 'system';
+  });
+
 }
 
 proxy.on('error', () => {});

@@ -64,6 +64,10 @@ class Head extends React.Component {
     ipcRenderer.send('getCert');
   }
 
+  toggleTheme() {
+    ipcRenderer.invoke('dark-mode:toggle');
+  }
+
   getAndInstallCertSteam() {
     ipcRenderer.send('getAndInstallCertSteam');
   }
@@ -107,6 +111,7 @@ class Head extends React.Component {
           {this.isSteamMode() && (
             <Button content="Get & Install Cert (Steam)" icon="share" labelPosition="right" onClick={this.getAndInstallCertSteam.bind(this)} />
           )}
+          <Button onClick={this.toggleTheme.bind(this)} icon={'adjust'} />
           <Button content="Get Cert" icon="share" labelPosition="right" onClick={this.getCert.bind(this)} />
 
           {this.state.proxyRunning ? (
