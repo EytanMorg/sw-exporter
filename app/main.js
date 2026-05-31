@@ -70,12 +70,12 @@ let quitting = false;
 
 function createWindow() {
   let mainWindowState = windowStateKeeper({
-    defaultWidth: 800,
+    defaultWidth: 1200,
     defaultHeight: 600,
   });
 
   global.win = new BrowserWindow({
-    minWidth: 800,
+    minWidth: 1200,
     minHeight: 600,
     x: mainWindowState.x,
     y: mainWindowState.y,
