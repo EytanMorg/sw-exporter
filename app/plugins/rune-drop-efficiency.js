@@ -59,6 +59,8 @@ module.exports = {
       case 'ConvertRune':
       case 'ConvertRune_v2':
       case 'ConfirmRune':
+      case 'refineRune':
+      case 'confirmRefineRune':
         runesInfo.push(this.logRuneDrop(resp.rune));
         break;
 
@@ -117,6 +119,8 @@ module.exports = {
         break;
 
       case 'RevalueRune':
+      case 'refineRune':
+      case 'confirmRefineRune':
         runesInfo.push('New rune efficiency value:' + this.logRuneDrop(resp.rune));
 
       default:
